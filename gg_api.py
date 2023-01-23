@@ -22,7 +22,7 @@ def get_nominees(year):
     names as keys, and each entry a list of strings. Do NOT change
     the name of this function or what it returns.'''
     # Your code here
-    nominees = {award: [] for award in OFFICIAL_AWARDS_1315}
+    nominees = {award: [] for award in OFFICIAL_AWARDS_1315} # change before submission
     return nominees
 
 def get_winner(year):
@@ -30,7 +30,7 @@ def get_winner(year):
     names as keys, and each entry containing a single string.
     Do NOT change the name of this function or what it returns.'''
     # Your code here
-    winners = {award: "" for award in OFFICIAL_AWARDS_1315}
+    winners = {award: "" for award in OFFICIAL_AWARDS_1315} # change before submission
     return winners
 
 def get_presenters(year):
@@ -38,7 +38,7 @@ def get_presenters(year):
     names as keys, and each entry a list of strings. Do NOT change the
     name of this function or what it returns.'''
     # Your code here
-    presenters = {award: [] for award in OFFICIAL_AWARDS_1315}
+    presenters = {award: [] for award in OFFICIAL_AWARDS_1315} # change before submission
     return presenters
 
 def pre_ceremony():
