@@ -7,12 +7,14 @@ def get_hosts(year):
     '''Hosts is a list of one or more strings. Do NOT change the name
     of this function or what it returns.'''
     # Your code here
+    hosts = []
     return hosts
 
 def get_awards(year):
     '''Awards is a list of strings. Do NOT change the name
     of this function or what it returns.'''
     # Your code here
+    awards = []
     return awards
 
 def get_nominees(year):
@@ -20,6 +22,7 @@ def get_nominees(year):
     names as keys, and each entry a list of strings. Do NOT change
     the name of this function or what it returns.'''
     # Your code here
+    nominees = {award: [] for award in OFFICIAL_AWARDS_1315}
     return nominees
 
 def get_winner(year):
@@ -27,6 +30,7 @@ def get_winner(year):
     names as keys, and each entry containing a single string.
     Do NOT change the name of this function or what it returns.'''
     # Your code here
+    winners = {award: "" for award in OFFICIAL_AWARDS_1315}
     return winners
 
 def get_presenters(year):
@@ -34,6 +38,7 @@ def get_presenters(year):
     names as keys, and each entry a list of strings. Do NOT change the
     name of this function or what it returns.'''
     # Your code here
+    presenters = {award: [] for award in OFFICIAL_AWARDS_1315}
     return presenters
 
 def pre_ceremony():
