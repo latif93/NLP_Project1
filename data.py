@@ -12,8 +12,7 @@ golden_globes_2015_url = "https://www.imdb.com/event/ev0000292/2015/1/?ref_=ev_e
 golden_globes_2013_html = requests.get(golden_globes_2013_url).text
 
 start_index_of_golden_globes_2013_info = golden_globes_2013_html.index("IMDbReactWidgets.NomineesWidget.push") + len("IMDbReactWidgets.NomineesWidget.push") + 19
-end_index_of_golden_globes_2013_info = 215334
-
+end_index_of_golden_globes_2013_info = golden_globes_2013_html.index("true}}") + len("true}}")
 golden_globes_2013_info = golden_globes_2013_html[start_index_of_golden_globes_2013_info:end_index_of_golden_globes_2013_info]
 golden_globes_2013_info = golden_globes_2013_info.replace("null", "None")
 golden_globes_2013_info = golden_globes_2013_info.replace("true", "True")
