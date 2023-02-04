@@ -1,85 +1,39 @@
-'''Version 0.35'''
-import find_winners
-import json
+from data import get_2013_award_data
 
 OFFICIAL_AWARDS_1315 = ['cecil b. demille award', 'best motion picture - drama', 'best performance by an actress in a motion picture - drama', 'best performance by an actor in a motion picture - drama', 'best motion picture - comedy or musical', 'best performance by an actress in a motion picture - comedy or musical', 'best performance by an actor in a motion picture - comedy or musical', 'best animated feature film', 'best foreign language film', 'best performance by an actress in a supporting role in a motion picture', 'best performance by an actor in a supporting role in a motion picture', 'best director - motion picture', 'best screenplay - motion picture', 'best original score - motion picture', 'best original song - motion picture', 'best television series - drama', 'best performance by an actress in a television series - drama', 'best performance by an actor in a television series - drama', 'best television series - comedy or musical', 'best performance by an actress in a television series - comedy or musical', 'best performance by an actor in a television series - comedy or musical', 'best mini-series or motion picture made for television', 'best performance by an actress in a mini-series or motion picture made for television', 'best performance by an actor in a mini-series or motion picture made for television', 'best performance by an actress in a supporting role in a series, mini-series or motion picture made for television', 'best performance by an actor in a supporting role in a series, mini-series or motion picture made for television']
 OFFICIAL_AWARDS_1819 = ['best motion picture - drama', 'best motion picture - musical or comedy', 'best performance by an actress in a motion picture - drama', 'best performance by an actor in a motion picture - drama', 'best performance by an actress in a motion picture - musical or comedy', 'best performance by an actor in a motion picture - musical or comedy', 'best performance by an actress in a supporting role in any motion picture', 'best performance by an actor in a supporting role in any motion picture', 'best director - motion picture', 'best screenplay - motion picture', 'best motion picture - animated', 'best motion picture - foreign language', 'best original score - motion picture', 'best original song - motion picture', 'best television series - drama', 'best television series - musical or comedy', 'best television limited series or motion picture made for television', 'best performance by an actress in a limited series or a motion picture made for television', 'best performance by an actor in a limited series or a motion picture made for television', 'best performance by an actress in a television series - drama', 'best performance by an actor in a television series - drama', 'best performance by an actress in a television series - musical or comedy', 'best performance by an actor in a television series - musical or comedy', 'best performance by an actress in a supporting role in a series, limited series or motion picture made for television', 'best performance by an actor in a supporting role in a series, limited series or motion picture made for television', 'cecil b. demille award']
 
-def get_hosts(year):
-    '''Hosts is a list of one or more strings. Do NOT change the name
-    of this function or what it returns.'''
-    # Your code here
-    hosts = []
-    return hosts
+# Autograder result from using this algorithm along w gg_api.py hardcoded awards:
+# 'winner': {'spelling': 0.6554487179487178}
 
-def get_awards(year):
-    '''Awards is a list of strings. Do NOT change the name
-    of this function or what it returns.'''
-    # Your code here
-    awards = []
-    return awards
+# words to look for when parsing a tweet for an award.
+# Example: for 'best motion picture - drama', most people will write it as 'best drama'.
+# so in a dictionary, map the official award name to the keywords that people would use.
+# 'best motion picture - drama' : ['best', 'drama']
+special_keywords = ['best', 'actor', 'actress', 'supporting',
+                    'drama', 'comedy', 'musical',
+                    'director', 'screenplay'
+                    'song', 'score', 'series',
+                    'animated', 'foreign']
 
-def get_nominees(year):
-    '''Nominees is a dictionary with the hard coded award
-    names as keys, and each entry a list of strings. Do NOT change
-    the name of this function or what it returns.'''
-    # Your code here
-    nominees = {award: [] for award in OFFICIAL_AWARDS_1315} # change before submission
-    return nominees
 
-def get_winner(year):
-    '''Winners is a dictionary with the hard coded award
-    names as keys, and each entry containing a single string.
-    Do NOT change the name of this function or what it returns.'''
-    # Your code here
+# key: official title, per the autograder award list in gg_api.py
+# value: keywords related to title
+# TODO: include keywords we should ignore, like "golden" & "globes", or if its a movie, ignore words like "television"
+awards_aliasing2 = {}
+for award in OFFICIAL_AWARDS_1315:
+    award_keywords = [k for k in special_keywords if k in award]
+    awards_aliasing2[award] = award_keywords
 
-    # winners = {award: "" for award in OFFICIAL_AWARDS_1315} # change before submission
 
-    winners = {}
-    found = find_winners.return_winners(year)
-    for award_obj in found:
-        autograder_category = award_obj.name.lower()
-        winner = award_obj.winner
-        winners[autograder_category] = winner
+def get_keywords():
+    return awards_aliasing2
 
-    return winners
+#
+#
+# Autograder result from my old hardcoded imdb data mechanism
+# 'winner': {'spelling': 0.6153846153846154}
+#
 
-def get_presenters(year):
-    '''Presenters is a dictionary with the hard coded award
-    names as keys, and each entry a list of strings. Do NOT change the
-    name of this function or what it returns.'''
-    # Your code here
-    presenters = {award: [] for award in OFFICIAL_AWARDS_1315} # change before submission
-    return presenters
 
-def pre_ceremony():
-    '''This function loads/fetches/processes any data your program
-    will use, and stores that data in your DB or in a json, csv, or
-    plain text file. It is the first thing the TA will run when grading.
-    Do NOT change the name of this function or what it returns.'''
-    # Your code here
-    print("Pre-ceremony processing complete.")
-    return
 
-def main():
-    '''This function calls your program. Typing "python gg_api.py"
-    will run this function. Or, in the interpreter, import gg_api
-    and then run gg_api.main(). This is the second thing the TA will
-    run when grading. Do NOT change the name of this function or
-    what it returns.'''
-    # Your code here
-
-    # I think this would be the general structure for the required JSON output stuff
-    # But it's not done / idk where it belongs / idk what we're basing it all off of.
-    results = {"Host": '[placeholder]'}
-    for won_award in find_winners.return_winners():
-        results[won_award] = {"Presenters": won_award.presenters,
-                              "Nominees": won_award.nominees,
-                              "Winner": won_award.winner}
-    json_result = json.dumps(results)
-    print(json_result)
-
-    return
-
-if __name__ == '__main__':
-    main()
