@@ -1,8 +1,23 @@
 import json
 import re
+import sys
 
-from data import get_2013_award_data  # had to install requests to run this, do we note this for the TA to run our code?
+import data  # had to install requests to run this, do we note this for the TA to run our code?
 from award_hardcoded import get_keywords  # hardcoded Award names, mapped to their keywords
+
+# TODO: Regex
+#      - movie or show titles like "Argo" and "Homeland"
+#      - special names like "Daniel Day-Lewis"
+
+
+# list of all Award objects and all of their info
+all_award_info = []
+
+# dictionary where each key is an award,
+# then each value is another dictionary in which each key is a 'winner' string mapped to frequency
+award_to_winners_to_votes = dict()
+
+name_matcher = "[A-Z][a-z]* [A-Z][a-z]*"
 
 
 # This might be useful for the "required output format"
@@ -18,21 +33,27 @@ class Award:
         return "Award: " + self.name + "\n  Winner: " + self.winner
 
 
-# list of all Award objects and all of their info
-all_award_info = []
-
-
-def import_json_file():
-    file = open('gg2013.json')
-    tweets = json.load(file)
-    file.close()
-    return tweets
+def import_json_file(year):
+    filename = 'gg' + year + '.json'
+    try:
+        file = open(filename)
+        tweets = json.load(file)
+        file.close()
+        return tweets
+    except FileNotFoundError:
+        print("Could not find the file " + filename)
+        sys.exit()
 
 
 # extracting individual category names from their corresponding nominees and store that info in list of all awards
-def extract_and_parse_imdb_data():
-    # importing in the mined imdb data
-    imdb_data = get_2013_award_data()
+def extract_and_parse_imdb_data(year):
+    # importing in the mined imdb data.
+    # TODO: should we be able to allow for years 2018/2019?
+    if year == '2013':
+        imdb_data = data.get_2013_award_data()
+    elif year == '2015':
+        imdb_data = data.get_2015_award_data()
+
     cats_and_noms_str = imdb_data.split("\n\n")  # break up the different categories
 
     for mapping in cats_and_noms_str:
@@ -41,11 +62,18 @@ def extract_and_parse_imdb_data():
         nominees = mapping[1:]
 
         if category:  # for some reason a final parsed category comes up as '', so just ignore it
-            keywords = get_keywords()[category]
+
+            # imdb data says "Miniseries" whereas autograder says "Mini-series". Add a '-' to satisfy autograder.
+            miniseries_index = category.find("Miniseries")
+            if miniseries_index != -1:
+                hyphen_index = miniseries_index + 4
+                category = category[:hyphen_index] + "-" + category[hyphen_index:]
+
+            keywords = get_keywords()[category.lower()]  # hardcoded autograder awards in lowercase
             all_award_info.append(Award(category, nominees, keywords))
 
-    # print("Award: " + category + ". \nNominees: " + str(nominees))
-    # print()
+    # specialized awards not included from IMDB mining but included in hardcoded awards from autograder
+    all_award_info.append(Award("Cecil B. DeMille Award", [], ['cecil']))
 
 
 def add_to_dict(item, freq_dict):
@@ -55,23 +83,13 @@ def add_to_dict(item, freq_dict):
         freq_dict[item] += 1
 
 
-name_matcher = "[A-Z][a-z]* [A-Z][a-z]*"
-# TODO: need a better regex matcher for other things like movie/show titles? for ex, Homeland is one of the winners
-#  but never comes up rn because it is only one word
-
-# TODO: find a way to exclude words like "golden" or "globes" from being counted as a winner match
-
-# dictionary where each key is an award,
-# then each value is another dictionary in which each key is a 'winner' string mapped to frequency
-award_to_winners = dict()
-
-
 # initializes each award key in award_to_winners to have a frequency dictionary as its value
 def initialize_winner_dicts():
-    for award in all_award_info:   # awards:
-        award_to_winners[award.name] = dict()
+    for award in all_award_info:
+        award_to_winners_to_votes[award.name] = dict()
 
 
+# TODO: find a way to exclude words like "golden" or "globes" from being counted as a winner match
 def parse_tweets(tweets):
     for i, tweet in enumerate(tweets):
         tweet_lower = tweet["text"].lower()
@@ -86,7 +104,7 @@ def parse_tweets(tweets):
                     winner_match = re.search(name_matcher, tweet["text"][goes_to_index:])
 
                     if winner_match:
-                        add_to_dict(winner_match.group(), award_to_winners[award.name])
+                        add_to_dict(winner_match.group(), award_to_winners_to_votes[award.name])
 
         # look for some pattern like {winner} won {award}, needs improvement
         else:
@@ -99,25 +117,25 @@ def parse_tweets(tweets):
                         # TODO: find a better starting point than index 0 so that it can be directly before the won_index?
                         winner_match = re.search(name_matcher, tweet["text"][0:won_index])
                         if winner_match:
-                            add_to_dict(winner_match.group(), award_to_winners[award.name])
+                            add_to_dict(winner_match.group(), award_to_winners_to_votes[award.name])
 
 
 # for each award, sort the frequency counts of the potential winners by greatest to least
 # but for some reason turns the inner frequency dictionary into a list of tuples but that works I guess
 def sort_winner_freqs():
-    for award_dict in award_to_winners:
-        award_to_winners[award_dict] = sorted(award_to_winners[award_dict].items(), key=lambda x: x[1], reverse=True)
+    for award_dict in award_to_winners_to_votes:
+        award_to_winners_to_votes[award_dict] = sorted(award_to_winners_to_votes[award_dict].items(), key=lambda x: x[1], reverse=True)
 
 
 # for each award, set its winner to the most frequently mentioned winner that was also a nominee
 def winner_typechecker():
-    for i, award in enumerate(award_to_winners.keys()):
+    for i, award in enumerate(award_to_winners_to_votes.keys()):
         potential_winner_index = 0
         potential_winner = ""
         nominees = all_award_info[i].nominees
 
-        while potential_winner not in nominees and potential_winner_index < len(award_to_winners[award]):
-            potential_winner = award_to_winners[award][potential_winner_index][0]
+        while potential_winner not in nominees and potential_winner_index < len(award_to_winners_to_votes[award]):
+            potential_winner = award_to_winners_to_votes[award][potential_winner_index][0]
             potential_winner_index += 1
 
         all_award_info[i].winner = potential_winner
@@ -129,21 +147,13 @@ def print_results():
         print(award)
         print()
 
-    # for award in award_to_winners.keys():
-    #     if award_to_winners[award]:
-    #         print(award + ", " + str(award_to_winners[award][0]))
-    #     else:
-    #         print(award + ", No results found")
 
-
-def main():
-    tweets = import_json_file()
-    extract_and_parse_imdb_data()
+def return_winners(year):
+    tweets = import_json_file(year)
+    extract_and_parse_imdb_data(year)
     initialize_winner_dicts()
     parse_tweets(tweets)
     sort_winner_freqs()
     winner_typechecker()
-    print_results()
-
-
-main()
+    # print_results()
+    return all_award_info
