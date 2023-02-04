@@ -1,91 +1,39 @@
 from data import get_2013_award_data
 
-# print(get_2013_award_data())
+OFFICIAL_AWARDS_1315 = ['cecil b. demille award', 'best motion picture - drama', 'best performance by an actress in a motion picture - drama', 'best performance by an actor in a motion picture - drama', 'best motion picture - comedy or musical', 'best performance by an actress in a motion picture - comedy or musical', 'best performance by an actor in a motion picture - comedy or musical', 'best animated feature film', 'best foreign language film', 'best performance by an actress in a supporting role in a motion picture', 'best performance by an actor in a supporting role in a motion picture', 'best director - motion picture', 'best screenplay - motion picture', 'best original score - motion picture', 'best original song - motion picture', 'best television series - drama', 'best performance by an actress in a television series - drama', 'best performance by an actor in a television series - drama', 'best television series - comedy or musical', 'best performance by an actress in a television series - comedy or musical', 'best performance by an actor in a television series - comedy or musical', 'best mini-series or motion picture made for television', 'best performance by an actress in a mini-series or motion picture made for television', 'best performance by an actor in a mini-series or motion picture made for television', 'best performance by an actress in a supporting role in a series, mini-series or motion picture made for television', 'best performance by an actor in a supporting role in a series, mini-series or motion picture made for television']
+OFFICIAL_AWARDS_1819 = ['best motion picture - drama', 'best motion picture - musical or comedy', 'best performance by an actress in a motion picture - drama', 'best performance by an actor in a motion picture - drama', 'best performance by an actress in a motion picture - musical or comedy', 'best performance by an actor in a motion picture - musical or comedy', 'best performance by an actress in a supporting role in any motion picture', 'best performance by an actor in a supporting role in any motion picture', 'best director - motion picture', 'best screenplay - motion picture', 'best motion picture - animated', 'best motion picture - foreign language', 'best original score - motion picture', 'best original song - motion picture', 'best television series - drama', 'best television series - musical or comedy', 'best television limited series or motion picture made for television', 'best performance by an actress in a limited series or a motion picture made for television', 'best performance by an actor in a limited series or a motion picture made for television', 'best performance by an actress in a television series - drama', 'best performance by an actor in a television series - drama', 'best performance by an actress in a television series - musical or comedy', 'best performance by an actor in a television series - musical or comedy', 'best performance by an actress in a supporting role in a series, limited series or motion picture made for television', 'best performance by an actor in a supporting role in a series, limited series or motion picture made for television', 'cecil b. demille award']
 
-# key: official title
+# Autograder result from using this algorithm along w gg_api.py hardcoded awards:
+# 'winner': {'spelling': 0.6554487179487178}
+
+# words to look for when parsing a tweet for an award.
+# Example: for 'best motion picture - drama', most people will write it as 'best drama'.
+# so in a dictionary, map the official award name to the keywords that people would use.
+# 'best motion picture - drama' : ['best', 'drama']
+special_keywords = ['best', 'actor', 'actress', 'supporting',
+                    'drama', 'comedy', 'musical',
+                    'director', 'screenplay'
+                    'song', 'score', 'series',
+                    'animated', 'foreign']
+
+
+# key: official title, per the autograder award list in gg_api.py
 # value: keywords related to title
 # TODO: include keywords we should ignore, like "golden" & "globes", or if its a movie, ignore words like "television"
-
-awards_aliasing = {
-    "Best Motion Picture - Drama":
-        ["best", "drama"],
-
-    "Best Motion Picture - Comedy or Musical":
-        ["best", "comedy", "musical"],
-
-    "Best Performance by an Actor in a Motion Picture - Drama":
-        ["best", "actor", "drama"],
-
-    "Best Performance by an Actress in a Motion Picture - Drama":
-        ["best", "actress", "drama"],
-
-    "Best Performance by an Actor in a Motion Picture - Comedy or Musical":
-        ["best", "actor", "comedy", "musical"],
-
-    "Best Performance by an Actress in a Motion Picture - Comedy or Musical":
-        ["best", "actress", "comedy", "musical"],
-
-    "Best Performance by an Actor in a Supporting Role in a Motion Picture":
-        ["best", "actor", "supporting"],
-
-    "Best Performance by an Actress in a Supporting Role in a Motion Picture":
-        ["best", "actress", "supporting"],
-
-    "Best Director - Motion Picture":
-        ["best", "director"],
-
-    "Best Screenplay - Motion Picture":
-        ["best", "screenplay"],
-
-    "Best Original Song - Motion Picture":
-        ["best", "song"],
-
-    "Best Original Score - Motion Picture":
-        ["best", "score"],
-
-    # some good results with the stuff from above
-
-    "Best Television Series - Drama":
-        ["best", "series", "drama"],
-
-    "Best Television Series - Comedy or Musical":
-        ["best", "series", "comedy"],  # idk if checking for musical really matters tbh
-
-    "Best Performance by an Actor in a Television Series - Drama":
-        ["best", "actor", "series", "drama"],
-
-    "Best Performance by an Actress in a Television Series - Drama":
-        ["best", "actress", "series", "drama"],
-
-    "Best Performance by an Actor in a Television Series - Comedy or Musical":
-        ["best", "actor", "series", "comedy"],
-
-    "Best Performance by an Actress in a Television Series - Comedy or Musical":
-        ["best", "actress", "series", "comedy"],
-
-    "Best Performance by an Actor in a Supporting Role in a Series, Miniseries or Motion Picture Made for Television":
-        ["best", "actor", "supporting", "series"],
-
-    "Best Performance by an Actress in a Supporting Role in a Series, Miniseries or Motion Picture Made for Television":
-        ["best", "actress", "supporting", "series"],
-
-    "Best Performance by an Actor in a Miniseries or Motion Picture Made for Television":
-        ["best", "actor", "series"],
-
-    "Best Performance by an Actress in a Miniseries or Motion Picture Made for Television":
-        ["best", "actress", "series"],
-
-    "Best Animated Feature Film":
-        ["best", "animation"],  # animated vs animation
-
-    "Best Foreign Language Film":
-        ["best", "foreign"],
-
-    "Best Miniseries or Motion Picture Made for Television":
-        ["best", "miniseries"]
-
-}
+awards_aliasing2 = {}
+for award in OFFICIAL_AWARDS_1315:
+    award_keywords = [k for k in special_keywords if k in award]
+    awards_aliasing2[award] = award_keywords
 
 
 def get_keywords():
-    return awards_aliasing
+    return awards_aliasing2
+
+#
+#
+# Autograder result from my old hardcoded imdb data mechanism
+# 'winner': {'spelling': 0.6153846153846154}
+#
+
+
+
