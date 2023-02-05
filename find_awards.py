@@ -19,7 +19,7 @@ def add_to_freq_dict(item, freq_dict):
     else:
         freq_dict[item] +=1
 def match_potential_awards(tweets):
-    award_matcher = "Best (.*?) [a-z]" #matches a phrase where Best is followed by capitalized words until a non-capitalized one is found
+    award_matcher = "Best (.*?) [a-z]" 
     awards_freq_dict = dict()
 
     for i, tweet in enumerate(tweets):
@@ -33,11 +33,10 @@ def match_potential_awards(tweets):
     for award in awards_freq_dict_sorted_by_highest_freq[0:50]: 
         if award[-2] == " ":
             award = award[0:-2] #fixing formatting of strings
-        if award.upper() not in duplicate_lst: #weeding out duplicates with different cases (i.e "Best picture and Best Picture")
+        if award.upper() not in duplicate_lst: #weeding out duplicates with different cases 
             duplicate_lst.append(award.upper())
             final_awards_lst.append(award) 
     return final_awards_lst  
 def find_awards(year):
     tweets = import_json_file(year)
-    print(match_potential_awards(tweets))
     return match_potential_awards(tweets)
