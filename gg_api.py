@@ -14,7 +14,7 @@ def get_hosts(year):
     '''Hosts is a list of one or more strings. Do NOT change the name
     of this function or what it returns.'''
     # Your code here
-    hosts = find_hosts.find_hosts(year)  # [:1] # return first two hosts
+    hosts = find_hosts.find_hosts(year)
     return hosts
 
 def get_awards(year):
@@ -51,7 +51,7 @@ def get_presenters(year):
     names as keys, and each entry a list of strings. Do NOT change the
     name of this function or what it returns.'''
     # Your code here
-    presenters = find_presenters.find_presenters(year, OFFICIAL_AWARDS_1315) # [0]
+    presenters = find_presenters.find_presenters(year, OFFICIAL_AWARDS_1315)
     return presenters
 
 def pre_ceremony():
@@ -72,16 +72,24 @@ def main():
     # Your code here
     # I think this would be the general structure for the required JSON output stuff
     # But it's not done / idk where it belongs / idk what we're basing it all off of.
-    results = {"Host": '[placeholder]'}
     year = sys.argv[1]
+    awards = get_awards(year)
     nominees = get_nominees(year)
-    print(get_awards(year))
+    hosts = get_hosts(year)
+    presenters = get_presenters(year)
+    readable_results = f"Host(s): {hosts}\n\n"
+
+    results = {"Host(s)": hosts}
     for won_award in find_winners.return_winners(year):
+        won_award.nominees = nominees[won_award.name.lower()]
+        won_award.presenters = presenters[won_award.name.lower()]
+        readable_results += f"Award: {won_award.name}\nPresenters: {won_award.presenters}\nNominees: {won_award.nominees}\nWinner: {won_award.winner}\n\n"
         results[won_award.name] = {"Presenters": won_award.presenters,
-                              "Nominees": nominees[won_award.name.lower()],
+                              "Nominees": won_award.nominees,
                               "Winner": won_award.winner}
     json_result = json.dumps(results)
     print(json_result)
+    print(readable_results)
 
     return
 
