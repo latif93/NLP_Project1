@@ -1,5 +1,6 @@
 import json
 import re
+import sys
 
 def import_json_file(year):
     filename = f"gg{year}.json"

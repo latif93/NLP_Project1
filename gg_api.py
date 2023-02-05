@@ -2,6 +2,7 @@
 import find_winners
 import find_awards
 import find_nominees
+import find_hosts
 import json
 import sys
 
@@ -12,7 +13,7 @@ def get_hosts(year):
     '''Hosts is a list of one or more strings. Do NOT change the name
     of this function or what it returns.'''
     # Your code here
-    hosts = []
+    hosts = find_hosts.find_hosts(year)[:1]
     return hosts
 
 def get_awards(year):
