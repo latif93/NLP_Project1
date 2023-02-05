@@ -22,11 +22,11 @@ name_matcher = "[A-Z][a-z]* [A-Z][a-z]*"
 
 # This might be useful for the "required output format"
 class Award:
-    def __init__(self, name, nominees, keywords):
+    def __init__(self, name, nominees, presenters, keywords):
         self.name = name
         self.nominees = nominees
         self.winner = ""
-        self.presenters = []
+        self.presenters = presenters
         self.keywords = keywords
 
     def __str__(self):

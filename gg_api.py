@@ -3,6 +3,7 @@ import find_winners
 import find_awards
 import find_nominees
 import find_hosts
+import find_presenters
 import json
 import sys
 
@@ -29,7 +30,6 @@ def get_nominees(year):
     the name of this function or what it returns.'''
     # Your code here
     nominees = find_nominees.find_nominees(year, OFFICIAL_AWARDS_1315)
-    #nominees = {award: [] for award in OFFICIAL_AWARDS_1315} # change before submission
     return nominees
 
 def get_winner(year):
@@ -37,9 +37,6 @@ def get_winner(year):
     names as keys, and each entry containing a single string.
     Do NOT change the name of this function or what it returns.'''
     # Your code here
-
-    # winners = {award: "" for award in OFFICIAL_AWARDS_1315} # change before submission
-
     winners = {}
     found = find_winners.return_winners(year)
     for award_obj in found:
@@ -54,7 +51,7 @@ def get_presenters(year):
     names as keys, and each entry a list of strings. Do NOT change the
     name of this function or what it returns.'''
     # Your code here
-    presenters = {award: [] for award in OFFICIAL_AWARDS_1315} # change before submission
+    presenters = find_presenters.find_presenters(year, OFFICIAL_AWARDS_1315)[0]
     return presenters
 
 def pre_ceremony():
