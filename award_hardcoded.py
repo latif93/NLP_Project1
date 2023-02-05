@@ -14,7 +14,7 @@ special_keywords = ['best', 'actor', 'actress', 'supporting',
                     'drama', 'comedy', 'musical',
                     'director', 'screenplay'
                     'song', 'score', 'series',
-                    'animated', 'foreign']
+                    'animated', 'foreign', 'cecil', 'demille']
 
 
 # key: official title, per the autograder award list in gg_api.py
@@ -34,6 +34,3 @@ def get_keywords():
 # Autograder result from my old hardcoded imdb data mechanism
 # 'winner': {'spelling': 0.6153846153846154}
 #
-
-
-
