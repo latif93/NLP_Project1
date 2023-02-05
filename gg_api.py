@@ -4,6 +4,8 @@ import find_awards
 import find_nominees
 import find_hosts
 import find_presenters
+import find_best_dressed
+import find_worst_dressed
 import json
 import sys
 
@@ -77,6 +79,8 @@ def main():
     nominees = get_nominees(year)
     hosts = get_hosts(year)
     presenters = get_presenters(year)
+    best_dressed = find_best_dressed.find_best_dressed(year)
+    worst_dressed = find_worst_dressed.find_worst_dressed(year)
     readable_results = f"Host(s): {hosts}\n\n"
 
     results = {"Host(s)": hosts}
@@ -87,6 +91,7 @@ def main():
         results[won_award.name] = {"Presenters": won_award.presenters,
                               "Nominees": won_award.nominees,
                               "Winner": won_award.winner}
+    readable_results += f"Best Dressed: {best_dressed}\nWorst Dressed: {worst_dressed}"
     json_result = json.dumps(results)
     print(json_result)
     print(readable_results)
