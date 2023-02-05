@@ -13,7 +13,7 @@ def get_hosts(year):
     '''Hosts is a list of one or more strings. Do NOT change the name
     of this function or what it returns.'''
     # Your code here
-    hosts = find_hosts.find_hosts(year)[:1]
+    hosts = find_hosts.find_hosts(year)[:1] # return first two hosts
     return hosts
 
 def get_awards(year):

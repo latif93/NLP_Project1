@@ -1,4 +1,3 @@
-
 import json
 import re
 import sys
@@ -29,4 +28,4 @@ def find_hosts(year):
             for host in hosts:
                 add_to_freq_dict(host, host_freq_dict)
     host_freq_dict_sorted_by_highest_freq = sorted(host_freq_dict, key = host_freq_dict.get)[::-1]
-    return host_freq_dict_sorted_by_highest_freq[1:]
+    return host_freq_dict_sorted_by_highest_freq[1:] #Remove first item, typically "Golden Globes"
