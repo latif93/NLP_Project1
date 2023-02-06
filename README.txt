@@ -6,4 +6,13 @@ Packages to download:
 "requests" --> run the command "python3 -m pip install requests"
 
 Instructions:
-Running "python3 gg_api.py {year}" will run all of our code. The first output to stdout is the JSON compatible format, and the second output to stdout is the human-readable format.
+Running the autograder will run all of our code for scoring.
+Running "python3 gg_api.py {year}" will also run all of our code, AND output the results:
+  - The first output to stdout is the JSON-compatible format.
+  - The second output to stdout is the human-readable format.
+
+We assume the tweet data filenames will maintain the format "gg{year}.json"
+
+* Note: if you do not provide a year argument when calling gg_api.py, it will not work
+* Note: We have a get_awards() algorithm to parse the tweets for award names on our own, but we also separately hardcode
+        award names for our winners, nominees, and presenters, per the project specifications regarding cascading error.
