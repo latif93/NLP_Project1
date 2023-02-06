@@ -22,11 +22,11 @@ name_matcher = "[A-Z][a-z]* [A-Z][a-z]*"
 
 # This might be useful for the "required output format"
 class Award:
-    def __init__(self, name, nominees, presenters, keywords):
+    def __init__(self, name, nominees, keywords):
         self.name = name
         self.nominees = nominees
         self.winner = ""
-        self.presenters = presenters
+        self.presenters = []
         self.keywords = keywords
 
     def __str__(self):
@@ -93,7 +93,6 @@ def initialize_winner_dicts():
 def parse_tweets(tweets):
     for i, tweet in enumerate(tweets):
         tweet_lower = tweet["text"].lower()
-
         # TODO: think of other phrasings indicative of someone winning something?
         # look for some pattern like {award} goes to {winner}, needs improvement
         goes_to_index = tweet_lower.find("goes to")
